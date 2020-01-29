@@ -1,11 +1,26 @@
-2
-Train N0: 
-dfg
-dfg
-20
-30
+6
 Train N1: 
-dfg
-dfg
-dfg
-30
+sdsf
+sdfsdf
+sdfsdf
+20
+Train N2: 
+dsfsd
+sdf
+dsf
+25
+Train N3: 
+Rivne
+Lviv
+15:30
+1
+Train N4: 
+Kyiv
+Ternopil
+18:00
+2
+Train N5: 
+Herson
+Poltava
+19:00
+3

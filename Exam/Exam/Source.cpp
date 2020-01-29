@@ -14,11 +14,8 @@
 
 //                            Додати звідки поїзд
 //                            Сортування по finish station
-//Читання і запис у фал
-//Видалення поїзду
-
-
-
+//                            Читання і запис у фал
+//                            Видалення поїзду
 
 #include<iostream>
 #include<string>
@@ -26,23 +23,31 @@
 #include<vector>
 #include<fstream>
 
-
-
-
 using namespace std;
 //class Train 
 class Train
 {
 public:
 	Train() {  };
-	Train(int i) { 	this->Fill(); };
+	Train(int i)
+	{
+		cout << "Enter start station : ";
+		cin >> this->start_station;
+		cout << "Enter finish station : ";
+		cin >> this->finish_station;
+		cout << "Enter time departmen : ";
+		cin >> this->time_started;
+		cout << "Enter number train : ";
+		cin >> this->number_train;
+	};
 	~Train() {};
+
 	void Show() {
 		cout << "                 Train" << endl;
-		cout << " Start station : " << this->start_station << endl;
-		cout << " Finish station : "<< this->finish_station<<endl;
-		cout << "Time departmen : "<<this->time_started<<endl;
-		cout << "Number train : "<< this->number_train<<endl<<endl;
+		cout << " Start station :      " << this->start_station << endl;
+		cout << " Finish station :     "<< this->finish_station<<endl;
+		cout << "Time departmen :      "<<this->time_started<<endl;
+		cout << "Number train :        "<< this->number_train<<endl<<endl;
 	};
 
 	int Get_number()											{ return this->number_train;					};
@@ -57,18 +62,7 @@ public:
 
 
 
-protected:
-	void Fill() {
-		cin.ignore();
-		cout << "Enter start station : ";
-		getline(cin, this->start_station);
-		cout << "Enter finish station : ";
-		getline(cin, this->finish_station);
-		cout << "Enter time departmen : ";
-		getline(cin, this->time_started);
-		cout << "Enter number train : ";
-		cin >> this->number_train;
-	};
+
 private:
 
 	string start_station;
@@ -77,12 +71,12 @@ private:
 	int number_train;
 };
 //This is func out class, special for work with vector(array)
-void Show_all(vector<Train> avtovokzal) {
+void Show_all(vector<Train> &avtovokzal) {
 	cout << "                         *All TRAIN   " << endl;
+	
 	for (int i = 0; i < avtovokzal.size();i++)					 { 
-		cout << "The train N " << i << ": " << endl;
-		avtovokzal[i].Show()
-			;						}
+		cout << "The train N " << i + 1 << ": " << endl;
+		avtovokzal[i].Show()	;						}
 	cout << "                         All TRAIN*   " << endl;
 }
 
@@ -106,7 +100,7 @@ bool Sort_by_finish_station(Train &avtovokzal, Train &other)
 	return avtovokzal.Get_rout() < other.Get_rout();
 }
 
-void Sorting_by_finish_station(vector<Train> avtovokzal)
+void Sorting_by_finish_station(vector<Train> &avtovokzal)
 {
 	sort(avtovokzal.begin(), avtovokzal.end(), Sort_by_finish_station);
 	Show_all(avtovokzal);
@@ -117,10 +111,11 @@ void Sorting_by_finish_station(vector<Train> avtovokzal)
 
 void Read_from_file(vector<Train> &avtovokzal)
 {
-	string path = "data.txt";
+	string path = "data1.txt";
 	ifstream readFile;
 	readFile.open(path);
 	
+
 	if (!readFile.is_open())
 	{
 		cout << "Can't open file " << endl;
@@ -128,27 +123,28 @@ void Read_from_file(vector<Train> &avtovokzal)
 
 
 	else
+
 	{
 		cout << "File is open" << endl;
-		char temp[255];
-		readFile.getline(temp, 255);
-		int size = atoi(temp);
-		Train *tmp = new Train[size];
-		for (int i = 0; i < size; i++)
-		{
-			readFile.getline(temp, 255);
-			tmp[i].Set_start_station(tmp[i].Get_start_station());
-			readFile.getline(temp, 255);
-			tmp[i].Set_rout(tmp[i].Get_rout());
-			readFile.getline(temp, 255);
-			tmp[i].Set_started_time(tmp[i].Get_started_time());
-			readFile.getline(temp, 255);
-			tmp[i].Set_number(tmp[i].Get_number());
-			avtovokzal.push_back(tmp[i]);
-			
-
-		}
 		
+		
+				
+		while (!readFile.eof())
+		{
+			char temp[255];
+			Train tmp;
+			
+			readFile.getline(temp, 255);
+			tmp.Set_start_station(temp);
+			readFile.getline(temp, 255);
+			tmp.Set_rout(temp);
+			readFile.getline(temp, 255);
+			tmp.Set_started_time(temp);
+			readFile.getline(temp, 255);
+			tmp.Set_number(atoi(temp));
+			avtovokzal.push_back(tmp);
+			
+		}
 	
 	
 	}
@@ -161,7 +157,7 @@ void Read_from_file(vector<Train> &avtovokzal)
 
 
 
-void Write_to_file(vector<Train> &avtovokzal)
+void Write_to_file(vector<Train> avtovokzal)
 {
 	ofstream writeFile;
 	string path = "data.txt";
@@ -172,10 +168,10 @@ void Write_to_file(vector<Train> &avtovokzal)
 	}
 	else
 	{
-		writeFile << avtovokzal.size() << endl;
-		for (int i = 0; i < avtovokzal.size(); i++)
+		writeFile << avtovokzal.size()-1 << endl;
+		for (int i = 0; i < avtovokzal.size()-1; i++)
 		{
-			writeFile << "Train N" << i << ": " << endl;
+			writeFile << "Train N" << i+1 << ": " << endl;
 			writeFile << avtovokzal[i].Get_start_station() << endl;;
 			writeFile << avtovokzal[i].Get_rout() << endl;
 			writeFile << avtovokzal[i].Get_started_time() << endl;
@@ -202,6 +198,28 @@ void Find_rout(vector<Train> &avtovokzal) {
 	
 	}
 }
+
+void DeleteTrain(vector<Train> &avtovokzal) {
+	int number;
+	bool flag = false;
+
+	cout << "Enter the number of train do You want to delete: ";
+	cin >> number;
+
+	for (int i = 0; i < avtovokzal.size(); i++) {
+		if (avtovokzal[i].Get_number () == number) {
+			avtovokzal.erase(avtovokzal.begin() + i);
+			cout << "Succesfull." << endl;
+			flag = true;
+			break;
+		}
+	}
+
+	if (!flag) {
+		cout << "Not found." << endl;
+	}
+}
+
 //menu, bool special for eazy exit
 bool menu() {
 
@@ -217,13 +235,14 @@ bool menu() {
 		cout << "5. Sorting by finish station " << endl;
 		cout << "6. Read from file " << endl;
 		cout << "7. Write in file " << endl;
+		cout << "8. Delete train by number " << endl;
 		cout << "0. Exit " << endl;
 		cin >> choise;
 		switch (choise)
 		{
 			case 1:
 				system("cls");
-				avtovokzal.push_back(Train());
+				avtovokzal.push_back(Train(1));
 				break;
 			case 2:
 				system("cls");
@@ -248,6 +267,10 @@ bool menu() {
 			case 7:
 				system("cls");
 				Write_to_file(avtovokzal);
+				break;
+			case 8:
+				system("cls");
+				DeleteTrain(avtovokzal);
 				break;
 			case 0:
 				system("cls");
